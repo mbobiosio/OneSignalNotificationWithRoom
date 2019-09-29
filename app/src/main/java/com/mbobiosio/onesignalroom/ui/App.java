@@ -1,10 +1,11 @@
 package com.mbobiosio.onesignalroom.ui;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Intent;
 import android.util.Log;
+
 import androidx.appcompat.app.AppCompatDelegate;
+
 import com.mbobiosio.onesignalroom.ui.data.NotificationDB;
 import com.mbobiosio.onesignalroom.ui.model.Notification;
 import com.mbobiosio.onesignalroom.ui.ui.activity.NotificationDetail;
@@ -14,13 +15,15 @@ import com.onesignal.OSNotification;
 import com.onesignal.OSNotificationAction;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OneSignal;
+
+import org.json.JSONObject;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import org.json.JSONObject;
 import timber.log.Timber;
 
 /**

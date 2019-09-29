@@ -1,15 +1,43 @@
 package com.mbobiosio.onesignalroom.ui.ui.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import com.mbobiosio.onesignalroom.R;
 
-public class MainActivity extends AppCompatActivity {
+import com.mbobiosio.onesignalroom.R;
+import com.mbobiosio.onesignalroom.ui.data.NotificationDB;
+import com.mbobiosio.onesignalroom.ui.ui.base.BaseActivity;
+import com.mbobiosio.onesignalroom.ui.view.NotificationDao;
+
+public class MainActivity extends BaseActivity {
+
+    NotificationDB mNotifDB;
+    NotificationDao mNotifDAO;
+    BroadcastReceiver mReceiver;
+    IntentFilter mIntentFilter;
+
+    @Override
+    protected int getLayoutResID() {
+        return R.layout.activity_main;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        mNotifDB = NotificationDB.getInstance(this);
+        mNotifDAO = mNotifDB.notificationDao();
+        mIntentFilter = new IntentFilter();
+
+        mIntentFilter.addAction("com.mbobiosio.onesignalroom");
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                //removeBadge(mNavigation, R.id.navigation_account);
+            }
+        };
     }
 
 /*
@@ -48,5 +76,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        registerReceiver(mReceiver, mIntentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mReceiver);
     }
 }
