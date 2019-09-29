@@ -1,4 +1,4 @@
-package com.mbobiosio.onesignalroom.ui.base;
+package com.mbobiosio.onesignalroom.ui.ui.base;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
