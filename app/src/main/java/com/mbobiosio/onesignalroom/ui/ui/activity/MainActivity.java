@@ -4,9 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
+import androidx.annotation.IdRes;
+
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mbobiosio.onesignalroom.R;
+import com.mbobiosio.onesignalroom.ui.App;
 import com.mbobiosio.onesignalroom.ui.data.NotificationDB;
 import com.mbobiosio.onesignalroom.ui.ui.base.BaseActivity;
 import com.mbobiosio.onesignalroom.ui.view.NotificationDao;
@@ -17,6 +26,7 @@ public class MainActivity extends BaseActivity {
     NotificationDao mNotifDAO;
     BroadcastReceiver mReceiver;
     IntentFilter mIntentFilter;
+    private static int items;
 
     @Override
     protected int getLayoutResID() {
@@ -38,6 +48,8 @@ public class MainActivity extends BaseActivity {
                 //removeBadge(mNavigation, R.id.navigation_account);
             }
         };
+
+        //notification("", mNotifDAO);
     }
 
 /*
@@ -69,6 +81,25 @@ public class MainActivity extends BaseActivity {
     }
 */
 
+    private static void notification(BottomNavigationView mNavigation, NotificationDao dao) {
+        new AsyncTask<Void, Void, Integer>() {
+            @Override
+            protected Integer doInBackground(Void... voids) {
+                return dao.getCount();
+            }
+
+            @Override
+            protected void onPostExecute(Integer count) {
+                items = count;
+                if (count == 0) {
+                    //removeBadge(mNavigation, R.id.navigation_account);
+                } else {
+                    //showBadge(App.getInstance(), mNavigation, R.id.navigation_account, String.valueOf(count));
+                }
+            }
+        }.execute();
+    }
+
     public void invalidateCart() {
         invalidateOptionsMenu();
     }
@@ -77,6 +108,25 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         registerReceiver(mReceiver, mIntentFilter);
+        //removeBadge(mNavigation, R.id.navigation_account);
+    }
+
+    public static void removeBadge(BottomNavigationView bottomNavigationView, @IdRes int itemId) {
+        BottomNavigationItemView itemView = bottomNavigationView.findViewById(itemId);
+        if (itemView.getChildCount() == 3) {
+            itemView.removeViewAt(2);
+        }
+    }
+
+    public static void showBadge(Context context, BottomNavigationView
+            bottomNavigationView, @IdRes int itemId, String value) {
+        removeBadge(bottomNavigationView, itemId);
+        BottomNavigationItemView itemView = bottomNavigationView.findViewById(itemId);
+        View badge = LayoutInflater.from(context).inflate(R.layout.notification_badge, bottomNavigationView, false);
+
+        TextView text = badge.findViewById(R.id.badge_text_view);
+        text.setText(value);
+        itemView.addView(badge);
     }
 
     @Override
